@@ -1207,9 +1207,8 @@ public class JavaParser implements JavaParserConstants {
   final public void ClassOrInterfaceType() throws ParseException {
  Token t;
     t = jj_consume_token(IDENTIFIER);
-       //if(IsVariableDeclare) {
-        MyMaincontroller.GetArbre().GetClassByName(CurrentClass.peek()).addVisibility(t.toString());// }
-
+       if(!IsInMethod) {
+        MyMaincontroller.GetArbre().GetClassByName(CurrentClass.peek()).addVisibility(t.toString()); }
     if (jj_2_19(2)) {
       TypeArguments();
     } else {

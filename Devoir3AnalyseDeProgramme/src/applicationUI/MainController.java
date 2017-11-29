@@ -15,10 +15,16 @@ import JavaCodeParsing.JavaParser;
 import Models.*;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
+import applicationUMLWindow.*;
 
 
 public class MainController {
@@ -52,6 +58,11 @@ public class MainController {
 	    public void BrowseButton_Click(ActionEvent event) {
 	    	SelectFile();
 	    }
+	    
+	    @FXML
+	    public void Analyse3UMLDiagram_Click(ActionEvent event) {
+	    	ParseValidation3UMLDesign();
+	    }
 
 	    @FXML
 	    void CloseButton_Click(ActionEvent event) {
@@ -76,15 +87,7 @@ public class MainController {
 	    }
 	    
 	    
-	    private void ParseValidation2() {
-	    	String filePath=BrowseTextField.getText();;
-	    	String[] filesPath =new String[20];
-	    	filesPath[0]=filePath;
-	    	JavaParser parser=new JavaParser(filePath,this);
-	    	String result=parser.ExecuteParse(2);
 
-
-	    }
 	    private void ParseValidation1() {
 	    	String filePath=BrowseTextField.getText();;
 	    	String[] filesPath =new String[20];
@@ -94,6 +97,31 @@ public class MainController {
 	    	String result=parser.ExecuteParse(1);
 	    	//ResultMsg=Arbre.GetClassList();
 
+	    }
+	    private void ParseValidation2() {
+	    	String filePath=BrowseTextField.getText();;
+	    	String[] filesPath =new String[20];
+	    	filesPath[0]=filePath;
+	    	JavaParser parser=new JavaParser(filePath,this);
+	    	String result=parser.ExecuteParse(2);
+	    }
+	    
+	    private void ParseValidation3UMLDesign() {
+	    	
+			try {
+				Pane root;
+				FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/applicationUMLWindow/UMLWindow.fxml"));
+				fxmlLoader.setController(new UMLController());
+				Parent root1 = (Parent) fxmlLoader.load();
+				Scene newScene=new Scene(root1);
+				newScene.getStylesheets().add(getClass().getResource("/applicationUMLWindow/UMLapplication.css").toExternalForm());
+				Stage anotherStage = new Stage();
+				anotherStage.setScene(newScene);
+				anotherStage.show();
+			
+			} catch(Exception e) {
+				e.printStackTrace();
+			}
 	    }
 	    
 	    public void CreateAnalysisMessageBox (String message) {

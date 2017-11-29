@@ -4,6 +4,7 @@ public class Chien{
     protected String Race;
     public String Action;
 	public boolean test;
+	public Oiseau test;
 
     public Chien(String nom, String age, String race, String action){
         this.Nom = nom;

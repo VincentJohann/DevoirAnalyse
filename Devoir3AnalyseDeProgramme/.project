@@ -20,10 +20,16 @@
 			<arguments>
 			</arguments>
 		</buildCommand>
+		<buildCommand>
+			<name>org.emftools.validation.builder.emfValidationBuilder</name>
+			<arguments>
+			</arguments>
+		</buildCommand>
 	</buildSpec>
 	<natures>
 		<nature>org.eclipse.xtext.ui.shared.xtextNature</nature>
 		<nature>org.eclipse.jdt.core.javanature</nature>
 		<nature>sf.eclipse.javacc.javaccnature</nature>
+		<nature>org.emftools.validation.builder.emfValidationNature</nature>
 	</natures>
 </projectDescription>

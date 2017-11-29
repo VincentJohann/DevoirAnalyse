@@ -1062,8 +1062,8 @@ void ClassOrInterfaceType() :
 {
   (
     t=< IDENTIFIER >
-      {//if(IsVariableDeclare) {
-        MyMaincontroller.GetArbre().GetClassByName(CurrentClass.peek()).addVisibility(t.toString());// }
+      {if(!IsInMethod) {
+        MyMaincontroller.GetArbre().GetClassByName(CurrentClass.peek()).addVisibility(t.toString()); }
        }
     [
       LOOKAHEAD(2)
