@@ -3,6 +3,7 @@ public class Chien{
     private String Age;
     protected String Race;
     public String Action;
+	public boolean test;
 
     public Chien(String nom, String age, String race, String action){
         this.Nom = nom;
@@ -84,6 +85,11 @@ public class Grizly{
 	private class TigreEtGrizzlyInterne{
     public Tigre tigre;
     public Grizly grizly;
+	public Grizly grizlyBlanc;
+	public int Nbtigre;
+    public double coutgrizly;
+	public boolean tigreEstLa;
+    public float grizlyEsperance;
 
     public TigreEtGrizzlyInterne(){
         this.tigre = new Tigre("Tigrou","2","Bengal","Dort");

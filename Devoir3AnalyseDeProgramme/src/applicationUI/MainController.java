@@ -22,8 +22,7 @@ import javafx.stage.Stage;
 
 
 public class MainController {
-		public static int PublicClassCount;
-		public static int PrivateClassCount;
+
 		public Arbre Arbre;
 		public String  ResultMsg;
 	
@@ -43,6 +42,11 @@ public class MainController {
 	    @FXML
 	    public void Analyse1PublicPrivateStat_Click(ActionEvent event) {
 	    	ParseValidation1();
+	    }
+	    
+	    @FXML
+	    public void Analyse2Visibility_Click(ActionEvent event) {
+	    	ParseValidation2();
 	    }
 	    @FXML
 	    public void BrowseButton_Click(ActionEvent event) {
@@ -72,6 +76,15 @@ public class MainController {
 	    }
 	    
 	    
+	    private void ParseValidation2() {
+	    	String filePath=BrowseTextField.getText();;
+	    	String[] filesPath =new String[20];
+	    	filesPath[0]=filePath;
+	    	JavaParser parser=new JavaParser(filePath,this);
+	    	String result=parser.ExecuteParse(2);
+
+
+	    }
 	    private void ParseValidation1() {
 	    	String filePath=BrowseTextField.getText();;
 	    	String[] filesPath =new String[20];
@@ -100,8 +113,6 @@ public class MainController {
 	    
 	    private void InitValue() {
 	    	Arbre=new Arbre();
-	    	PublicClassCount=0;
-	    	PrivateClassCount=0;
 	    }
 	    
 	    public void AddClass(MaClasse maClasse){

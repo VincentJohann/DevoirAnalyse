@@ -3,6 +3,7 @@ package JavaCodeParsing;
 import java.io.*;
 import applicationUI.MainController;
 import Models.MaClasse;
+import java.util.Stack;
 
 /** Token Manager. */
 public class JavaParserTokenManager implements JavaParserConstants

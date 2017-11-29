@@ -51,16 +51,29 @@ package JavaCodeParsing;
 import java.io.*;
 import applicationUI.MainController;
 import Models.MaClasse;
-
+import java.util.Stack;
 public class JavaParser
 {
-  private String CurrentClass;
+  
+  private Stack<String> CurrentClass;
 
   private MainController MyMaincontroller;
 
   private InputStream inputStream = null;
 
   private String Filename;
+
+  private boolean IsInClass;
+
+  private boolean IsInMethod;
+
+  private boolean IsInConstructor;
+
+  private boolean IsVariableDeclare;
+
+  private String LastModifier;
+
+  
 
   /**
      * Constructor for JavaParser.
@@ -70,8 +83,15 @@ public class JavaParser
   {
     this (System.in);
     Filename = filename;
-    CurrentClass = "";
+    IsInClass = false;
+    IsInMethod =false;
+    IsInConstructor=false;
+    IsVariableDeclare=false;
+    CurrentClass = new Stack<String>();
+    CurrentClass.push("");
+    LastModifier="";
     MyMaincontroller = maincontroller;
+    
     try
     {
       inputStream = new FileInputStream(new File(filename));
@@ -84,8 +104,8 @@ public class JavaParser
   }
   JavaParser(JavaCharStream stream, MainController maincontroller)
   {
-    CurrentClass = "";
-    MyMaincontroller = maincontroller;
+    
+    //MyMaincontroller = maincontroller;
     jj_input_stream = stream;
     token_source = new JavaParserTokenManager(jj_input_stream);
     token = new Token();
@@ -131,9 +151,9 @@ public class JavaParser
   {
     switch (choice)
     {
-      case 1 : MyMaincontroller.SetResultMsg(MyMaincontroller.GetArbre().GetCompleteClassList());
+      case 1 : MyMaincontroller.SetResultMsg(MyMaincontroller.GetArbre().GetAnalyseAttribute1Statistic());
       break;
-      case 2 : MyMaincontroller.SetResultMsg("");
+      case 2 : MyMaincontroller.SetResultMsg(MyMaincontroller.GetArbre().GetAnalyseAttribute2Statistic());
       break;
       case 3 : MyMaincontroller.SetResultMsg("");
       break;
@@ -568,19 +588,20 @@ void ImportDeclaration() :
  */
 
 void Modifiers() :
-{
+{Token t;
 }
 {
   (
     LOOKAHEAD(2)
     (
-      < PUBLIC >
+      t=< PUBLIC > {LastModifier=t.toString(); }
     | 
       < STATIC >
     | 
-      < PROTECTED >
+      t=< PROTECTED >{LastModifier=t.toString(); }
+         
     | 
-      < PRIVATE >
+      t=< PRIVATE >{LastModifier=t.toString(); }
     | 
       < FINAL >
     | 
@@ -626,31 +647,29 @@ void TypeDeclaration() :
 void ClassOrInterfaceDeclaration() :
 {
   Token t;
-  boolean IsClass = false;
 }
 {
   (
     "class"
     {
-      // Not necessary for parser construction - debugging code
-      IsClass = true;
+      IsInClass = true;
     }
   | "interface"
   )
   t = < IDENTIFIER >
   {
-    if (IsClass)
+    if (IsInClass)
     {
-      System.out.println("matched public class Name: " + t);
       MaClasse newClass = new MaClasse(t.toString());
-      if (CurrentClass.equals(""))
+      if (CurrentClass.peek().equals(""))
       {
-        CurrentClass = t.toString();
+        CurrentClass.push(t.toString());
         MyMaincontroller.AddClass(newClass);
       }
       else
       {
-        MyMaincontroller.AddInnerClass(newClass, CurrentClass);
+        CurrentClass.push(t.toString());
+        MyMaincontroller.AddInnerClass(newClass, CurrentClass.get(1).toString());
       }
     }
   }
@@ -775,21 +794,24 @@ void ClassOrInterfaceBody() :
     )*
     "}"
   )
-  {
-    CurrentClass = "";
+  {       
+    IsInClass = false;
+    CurrentClass.pop();
   }
 }
 
 void ClassOrInterfaceBodyDeclaration() :
-{
+{Token attribut;
 }
 {
+ 
   (
     LOOKAHEAD(2)
     Initializer()
   | 
     Modifiers() // Just get all the modifiers out of the way. If you want to do
     // more checks, pass the modifiers down to the member
+    
     (
       LOOKAHEAD(3)
       ClassOrInterfaceDeclaration()
@@ -803,10 +825,11 @@ void ClassOrInterfaceBodyDeclaration() :
     | "="
     | ";"))
       FieldDeclaration()
+      
     | 
       LOOKAHEAD(2)
       AnnotationTypeDeclaration()
-    | 
+    |    
       MethodDeclaration()
     )
   | 
@@ -818,14 +841,32 @@ void FieldDeclaration() :
 {
 }
 {
+{
+  IsVariableDeclare=true;
+  if(LastModifier.equals("public")) {
+        MyMaincontroller.GetArbre().GetClassByName(CurrentClass.peek()).setCompteurPublic(
+        MyMaincontroller.GetArbre().GetClassByName(CurrentClass.peek()).getCompteurPublic()+1);
+    }else if(LastModifier.equals("protected")) { 
+  		MyMaincontroller.GetArbre().GetClassByName(CurrentClass.peek()).setCompteurProtected(
+        MyMaincontroller.GetArbre().GetClassByName(CurrentClass.peek()).getCompteurProtected()+1);
+        }
+	else if(LastModifier.equals("private")) {
+        MyMaincontroller.GetArbre().GetClassByName(CurrentClass.peek()).setCompteurPrivate(
+        MyMaincontroller.GetArbre().GetClassByName(CurrentClass.peek()).getCompteurPrivate()+1);
+        }
+        LastModifier="";
+        }
   (
     // Modifiers are already matched in the caller
-    Type() VariableDeclarator()
+    Type() 
+    VariableDeclarator()
     (
       "," VariableDeclarator()
     )*
     ";"
   )
+ {
+   IsVariableDeclare=false; }
 }
 
 void VariableDeclarator() :
@@ -873,6 +914,7 @@ void ArrayInitializer() :
 
 void MethodDeclaration() :
 {
+  IsInMethod=true; 
 }
 {
   (
@@ -885,6 +927,7 @@ void MethodDeclaration() :
     | ";"
     )
   )
+  {IsInMethod=false; }
 }
 
 void MethodDeclarator() :
@@ -929,6 +972,7 @@ void FormalParameter() :
 
 void ConstructorDeclaration() :
 {
+  IsInConstructor=true; 
 }
 {
   (
@@ -945,6 +989,7 @@ void ConstructorDeclaration() :
     )*
     "}"
   )
+  {IsInConstructor=false; }
 }
 
 void ExplicitConstructorInvocation() :
@@ -975,6 +1020,7 @@ void Type() :
   (
     LOOKAHEAD(2)
     ReferenceType()
+
   | 
     PrimitiveType()
   )
@@ -982,7 +1028,13 @@ void Type() :
 
 void ReferenceType() :
 {
+  if(IsVariableDeclare) { 
+  MyMaincontroller.GetArbre().GetClassByName(CurrentClass.peek()).setCompteurReference(
+  MyMaincontroller.GetArbre().GetClassByName(CurrentClass.peek()).getCompteurReference()+1);
+  }
+  IsVariableDeclare=false;
 }
+
 {
   (
     LOOKAHEAD(3)
@@ -1065,6 +1117,11 @@ void WildcardBounds() :
 
 void PrimitiveType() :
 {
+  if(IsVariableDeclare) {        
+  MyMaincontroller.GetArbre().GetClassByName(CurrentClass.peek()).setCompteurSimple(
+  MyMaincontroller.GetArbre().GetClassByName(CurrentClass.peek()).getCompteurSimple()+1);
+ }
+ IsVariableDeclare=false;
 }
 {
   (

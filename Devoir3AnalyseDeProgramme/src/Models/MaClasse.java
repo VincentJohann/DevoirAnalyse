@@ -12,6 +12,10 @@ public class MaClasse {
 	private int CompteurPrivate;
 	private int CompteurPublic;
 	private int CompteurProtected;
+	private int CompteurSimple;
+	private int CompteurReference;
+
+	
 
 	public MaClasse(String name) {
 		Name = name;
@@ -27,6 +31,22 @@ public class MaClasse {
 		return InnerClasses;
 	}
 
+	
+	public int getCompteurSimple() {
+		return CompteurSimple;
+	}
+
+	public void setCompteurSimple(int compteurSimple) {
+		CompteurSimple = compteurSimple;
+	}
+
+	public int getCompteurReference() {
+		return CompteurReference;
+	}
+
+	public void setCompteurReference(int compteurReference) {
+		CompteurReference = compteurReference;
+	}
 	public void setInnerClasses(List<MaClasse> innerClasses) {
 		InnerClasses = innerClasses;
 	}

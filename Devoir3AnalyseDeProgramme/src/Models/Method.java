@@ -1,15 +1,33 @@
 package Models;
 
+import java.util.List;
+
 public class Method {
 	String Name;
 	boolean IsPublic;
 	boolean IsPrivate;
 	boolean IsProtected;
-	public Method(String name, boolean isPublic, boolean isPrivate,
-			boolean isProtected) {
+	public List<Parameter> InnerClasses;
+	public Method(String name, String accessModifier ) {
 		Name = name;
-		IsPublic = isPublic;
-		IsPrivate = isPrivate;
-		IsProtected = isProtected;
+		SetAccessModifier(accessModifier);
+		
+	}
+	
+	public void SetAccessModifier(String modifier) {
+		IsPublic = false;
+		IsPrivate = false;
+		IsProtected = false; 		
+		switch(modifier) {
+		case "public": 
+			IsPublic = true;
+			break;
+		case "private": 
+			IsPrivate = true;
+			break;
+		case "protected": 
+			IsProtected = true;
+			break;
+		}
 	}
 }

@@ -5,13 +5,25 @@ public class Attribut {
 	boolean IsPublic;
 	boolean IsPrivate;
 	boolean IsProtected;
-	public Attribut(String name, boolean isPublic, boolean isPrivate,
-			boolean isProtected) {
+	public Attribut(String name,String modifier) {
 		Name = name;
-		IsPublic = isPublic;
-		IsPrivate = isPrivate;
-		IsProtected = isProtected;
+		SetAccessModifier(modifier);
 	}
-
+	public void SetAccessModifier(String modifier) {
+		IsPublic = false;
+		IsPrivate = false;
+		IsProtected = false; 		
+		switch(modifier) {
+		case "public": 
+			IsPublic = true;
+			break;
+		case "private": 
+			IsPrivate = true;
+			break;
+		case "protected": 
+			IsProtected = true;
+			break;
+		}
+	}
 
 }
