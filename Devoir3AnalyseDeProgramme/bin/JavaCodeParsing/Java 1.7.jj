@@ -71,6 +71,8 @@ public class JavaParser
 
   private boolean IsVariableDeclare;
 
+  private boolean IsExtended;
+
   private String LastModifier;
 
   
@@ -87,6 +89,7 @@ public class JavaParser
     IsInMethod =false;
     IsInConstructor=false;
     IsVariableDeclare=false;
+    IsExtended=false;
     CurrentClass = new Stack<String>();
     CurrentClass.push("");
     LastModifier="";
@@ -127,7 +130,7 @@ public class JavaParser
   // Main method for testing, here is a one-liner bash script that can be ran from
   // the command line:
   // for f in /some/directory/full/of/java/files/*.java; do java -cp . JavaParser $f; done
-  public String ExecuteParse(int choice)
+  public void ExecuteParse(int choice)
   {
     String parseMessage = " -----  Resultat de l'analyse ----- " + System.getProperty("line.separator");
     try
@@ -144,7 +147,6 @@ public class JavaParser
     
     ReturnResult(choice);
     MyMaincontroller.ShowAnalyseResult();
-    return parseMessage;
   }
 
   public void ReturnResult(int choice)
@@ -155,7 +157,7 @@ public class JavaParser
       break;
       case 2 : MyMaincontroller.SetResultMsg(MyMaincontroller.GetArbre().GetAnalyseAttribute2Statistic());
       break;
-      case 3 : MyMaincontroller.SetResultMsg("");
+      case 3 : MyMaincontroller.SetResultMsg(MyMaincontroller.GetArbre().GetAnalyseUML3Statistic());
       break;
       case 4 : MyMaincontroller.SetResultMsg("");
       break;
@@ -689,6 +691,7 @@ void ClassOrInterfaceDeclaration() :
 
 void ExtendsList() :
 {
+  IsExtended=true;
 }
 {
   "extends" ClassOrInterfaceType()
@@ -1064,6 +1067,12 @@ void ClassOrInterfaceType() :
     t=< IDENTIFIER >
       {if(!IsInMethod) {
         MyMaincontroller.GetArbre().GetClassByName(CurrentClass.peek()).addVisibility(t.toString()); }
+
+       if(IsExtended) {
+        MyMaincontroller.GetArbre().GetClassByName(CurrentClass.peek()).setParent(t.toString());
+        IsExtended=false;
+         }
+        
        }
     [
       LOOKAHEAD(2)

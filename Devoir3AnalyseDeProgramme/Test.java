@@ -1,4 +1,20 @@
-public class Chien{
+public class Animal{
+    private String Nom;
+    private String Age;
+    protected String Race;
+
+
+    public Animal(String nom, String age, String race, String action){
+        this.Nom = nom;
+        this.Age = age;
+        this.Race = race;
+
+}
+}
+
+
+
+public class Chien extends Animal{
     private String Nom;
     private String Age;
     protected String Race;

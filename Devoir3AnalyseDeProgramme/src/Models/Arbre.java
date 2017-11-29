@@ -90,12 +90,10 @@ public class Arbre {
 				double protectedAttrib =((double)item.getCompteurProtected()/(double)totalAttribute)*100 ;
 				resultMsg+="Voici le pourcentage d'attribut public :"+ Math.round(publicAttrib*100)/100.f  +" % \r\n";
 				resultMsg+="Voici le pourcentage d'attribut privé :"+ Math.round(privateAttrib*100)/100.f  +" % \r\n";
-				resultMsg+="Voici le pourcentage d'attribut protected :"+ Math.round(protectedAttrib*100)/100.f +" % \r\n";			
+				resultMsg+="Voici le pourcentage d'attribut protected :"+ Math.round(protectedAttrib*100)/100.f +" % \r\n ";			
 			}
-			
-			
-
-			}
+			resultMsg+="\r\n";
+		}
 
 		return resultMsg;
 	}
@@ -115,6 +113,24 @@ public class Arbre {
 				resultMsg+="Voici le pourcentage d'attribut simple(primitive) :"+ Math.round(simpleAttrib*100)/100.f +" % \r\n";
 				resultMsg+="Voici les visibilité:"+item.GetVisibilitys();
 			  }
+			resultMsg+="\r\n";
+			}
+		
+
+		return resultMsg;
+	}
+	
+	public String GetAnalyseUML3Statistic(){
+		InitCompleteClassList();
+		String resultMsg="Voici les statistiques de la portée des attibuts :\r\n";
+		for(MaClasse item : CompleteClasses){
+			resultMsg+="Pour la classe: --- "+item.getName()+" ---\r\n";		
+			resultMsg+="Voici les classes associée(Association):"+item.GetVisibilitys();
+			if(!item.getParent().equals("")) {
+				resultMsg+="Cette classe est une classe enfant de :"+item.getParent();
+				resultMsg+="\r\n";
+			} 
+			resultMsg+="\r\n";
 			}
 
 		return resultMsg;

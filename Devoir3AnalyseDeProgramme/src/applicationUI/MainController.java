@@ -61,7 +61,7 @@ public class MainController {
 	    
 	    @FXML
 	    public void Analyse3UMLDiagram_Click(ActionEvent event) {
-	    	ParseValidation3UMLDesign();
+	    	ParseValidation3UML();
 	    }
 
 	    @FXML
@@ -91,11 +91,9 @@ public class MainController {
 	    private void ParseValidation1() {
 	    	String filePath=BrowseTextField.getText();;
 	    	String[] filesPath =new String[20];
-	    	//arrayString[0]=textToValidate;
 	    	filesPath[0]=filePath;
 	    	JavaParser parser=new JavaParser(filePath,this);
-	    	String result=parser.ExecuteParse(1);
-	    	//ResultMsg=Arbre.GetClassList();
+	    	parser.ExecuteParse(1);
 
 	    }
 	    private void ParseValidation2() {
@@ -103,9 +101,17 @@ public class MainController {
 	    	String[] filesPath =new String[20];
 	    	filesPath[0]=filePath;
 	    	JavaParser parser=new JavaParser(filePath,this);
-	    	String result=parser.ExecuteParse(2);
+	    	parser.ExecuteParse(2);
 	    }
-	    
+	    private void ParseValidation3UML() {
+	    	
+	    	String filePath=BrowseTextField.getText();;
+	    	String[] filesPath =new String[20];
+	    	filesPath[0]=filePath;
+	    	JavaParser parser=new JavaParser(filePath,this);
+	    	parser.ExecuteParse(3);
+	    }
+	    /*
 	    private void ParseValidation3UMLDesign() {
 	    	
 			try {
@@ -122,7 +128,9 @@ public class MainController {
 			} catch(Exception e) {
 				e.printStackTrace();
 			}
-	    }
+	    }*/
+	    
+	   
 	    
 	    public void CreateAnalysisMessageBox (String message) {
 	    	

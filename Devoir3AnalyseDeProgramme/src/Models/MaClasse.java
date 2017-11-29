@@ -6,18 +6,20 @@ import java.util.List;
 public class MaClasse {
 	private String Name;
 
-	public List<MaClasse> InnerClasses;
-	public List<Attribut> Attributs;
+	private List<MaClasse> InnerClasses;
+	private List<Attribut> Attributs;
 	public List<Method> Methodes;
 	private int CompteurPrivate;
 	private int CompteurPublic;
 	private int CompteurProtected;
 	private int CompteurSimple;
 	private int CompteurReference;
-	public List<String> VisibilityClasses;
+	private String Parent;
+	private List<String> VisibilityClasses;
 	
 
 	public MaClasse(String name) {
+		Parent="";
 		Name = name;
 		CompteurPrivate = 0;
 		CompteurPublic = 0;
@@ -28,6 +30,14 @@ public class MaClasse {
 		VisibilityClasses= new ArrayList<String>();
 	}
 	
+	public String getParent() {
+		return Parent;
+	}
+
+	public void setParent(String parent) {
+		Parent = parent;
+	}
+
 	public void addVisibility(String newVisibility) {
 		if(!IsInVisibility(newVisibility)) {
 			VisibilityClasses.add(newVisibility);
@@ -50,7 +60,7 @@ public class MaClasse {
     	for(String item : VisibilityClasses) {
     		strList+=" "+item+", ";    		
     	}
-    	strList+="]\r\n";
+    	strList+="]\r\n ";
     	return strList;
 	}
 
