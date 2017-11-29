@@ -112,7 +112,8 @@ public class Arbre {
 				double referenceAttrib =((double)item.getCompteurReference()/(double)totalAttribute)*100 ;
 				double simpleAttrib =((double)item.getCompteurSimple()/(double)totalAttribute)*100 ;
 				resultMsg+="Voici le pourcentage d'attribut de référence objet :"+ Math.round(referenceAttrib*100)/100.f +" % \r\n";
-				resultMsg+="Voici le pourcentage d'attribut simple(primitive) :"+ Math.round(simpleAttrib*100)/100.f +" % \r\n";				
+				resultMsg+="Voici le pourcentage d'attribut simple(primitive) :"+ Math.round(simpleAttrib*100)/100.f +" % \r\n";
+				resultMsg+="Voici les visibilité:"+item.GetVisibilitys();
 			  }
 			}
 
@@ -122,7 +123,6 @@ public class Arbre {
 	
 	
 	public void IterateClassList(MaClasse myitem){
-		String classList="Liste des classe  interne:\r\n";
 		for(MaClasse item : myitem.getInnerClasses()){
 			CompleteClasses.add(item);
 			if(item.getInnerClasses().size()>0) {

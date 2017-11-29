@@ -880,9 +880,11 @@ void VariableDeclarator() :
 
 void VariableDeclaratorId() :
 {
+
 }
 {
-  < IDENTIFIER > 
+  < IDENTIFIER >
+
   (
   "[" "]"
   )*
@@ -1055,11 +1057,14 @@ void ReferenceType() :
 }
 
 void ClassOrInterfaceType() :
-{
+{Token t;
 }
 {
   (
-    < IDENTIFIER >
+    t=< IDENTIFIER >
+      {//if(IsVariableDeclare) {
+        MyMaincontroller.GetArbre().GetClassByName(CurrentClass.peek()).addVisibility(t.toString());// }
+       }
     [
       LOOKAHEAD(2)
       TypeArguments()

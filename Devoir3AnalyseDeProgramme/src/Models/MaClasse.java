@@ -14,7 +14,7 @@ public class MaClasse {
 	private int CompteurProtected;
 	private int CompteurSimple;
 	private int CompteurReference;
-
+	public List<String> VisibilityClasses;
 	
 
 	public MaClasse(String name) {
@@ -25,12 +25,47 @@ public class MaClasse {
 		InnerClasses= new ArrayList<MaClasse>();
 		Attributs= new ArrayList<Attribut>();
 		Methodes= new ArrayList<Method>();
+		VisibilityClasses= new ArrayList<String>();
+	}
+	
+	public void addVisibility(String newVisibility) {
+		if(!IsInVisibility(newVisibility)) {
+			VisibilityClasses.add(newVisibility);
+		}
+		
+	}
+	
+    public boolean IsInVisibility(String newVisibility) {
+    	boolean IsInList=false;
+    	for(String item : VisibilityClasses) {
+    		if(item.equals(newVisibility)) {
+    			IsInList=true;
+    		}
+    	}
+    	return IsInList;
+	}
+    
+    public String GetVisibilitys() {
+    	String strList="class "+Name+" visibility :[";
+    	for(String item : VisibilityClasses) {
+    		strList+=" "+item+", ";    		
+    	}
+    	strList+="]\r\n";
+    	return strList;
 	}
 
 	public List<MaClasse> getInnerClasses() {
 		return InnerClasses;
 	}
 
+
+	public List<String> getVisibilityClasses() {
+		return VisibilityClasses;
+	}
+
+	public void setVisibilityClasses(List<String> visibilityClasses) {
+		VisibilityClasses = visibilityClasses;
+	}
 	
 	public int getCompteurSimple() {
 		return CompteurSimple;

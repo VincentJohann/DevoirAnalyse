@@ -4,6 +4,7 @@
 }
 #CloseButton{
 	 -fx-pref-width: 70px;
+	 -fx-alignment: CENTER;
 }
 
 .my-special-button {
