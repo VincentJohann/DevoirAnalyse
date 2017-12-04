@@ -50,7 +50,7 @@ PARSER_BEGIN(JavaParser)
 package JavaCodeParsing;
 import java.io.*;
 import applicationUI.MainController;
-import Models.MaClasse;
+import Models.*;
 import java.util.Stack;
 public class JavaParser
 {
@@ -72,9 +72,22 @@ public class JavaParser
   private boolean IsVariableDeclare;
 
   private boolean IsExtended;
+  private boolean IsInBlock;
 
+  private String Invoker;
+  private String InnerMethodName;
   private String LastModifier;
 
+  private Parameter AttributeIdentifier;
+
+  private Method MethodName;
+
+  private Method InnerMethod;
+  
+
+ private String ReturnType;
+
+ private String InMethodCallerType; 
   
 
   /**
@@ -85,14 +98,22 @@ public class JavaParser
   {
     this (System.in);
     Filename = filename;
+    MethodName=new Method("","public");
+    InnerMethod=new Method("","public");
     IsInClass = false;
     IsInMethod =false;
+    IsInBlock=false;
     IsInConstructor=false;
     IsVariableDeclare=false;
     IsExtended=false;
     CurrentClass = new Stack<String>();
     CurrentClass.push("");
     LastModifier="";
+    Invoker="";
+    AttributeIdentifier=new Parameter("","");
+    ReturnType="";
+    InMethodCallerType="";
+    InnerMethodName="";
     MyMaincontroller = maincontroller;
     
     try
@@ -159,11 +180,9 @@ public class JavaParser
       break;
       case 3 : MyMaincontroller.SetResultMsg(MyMaincontroller.GetArbre().GetAnalyseUML3Statistic());
       break;
-      case 4 : MyMaincontroller.SetResultMsg("");
+      case 4 : MyMaincontroller.SetResultMsg(MyMaincontroller.GetArbre().GetAnalyseMethod4Stats());
       break;
-      case 5 : MyMaincontroller.SetResultMsg("");
-      break;
-      case 6 : MyMaincontroller.SetResultMsg("");
+      case 5 : MyMaincontroller.SetResultMsg(MyMaincontroller.GetArbre().GetAnalyseMethod5Stats());
       break;
       default : MyMaincontroller.SetResultMsg("");
       break;
@@ -833,7 +852,8 @@ void ClassOrInterfaceBodyDeclaration() :
       LOOKAHEAD(2)
       AnnotationTypeDeclaration()
     |    
-      MethodDeclaration()
+    MethodDeclaration()
+
     )
   | 
     ";"
@@ -857,7 +877,7 @@ void FieldDeclaration() :
         MyMaincontroller.GetArbre().GetClassByName(CurrentClass.peek()).setCompteurPrivate(
         MyMaincontroller.GetArbre().GetClassByName(CurrentClass.peek()).getCompteurPrivate()+1);
         }
-        LastModifier="";
+        //LastModifier="";
         }
   (
     // Modifiers are already matched in the caller
@@ -882,12 +902,26 @@ void VariableDeclarator() :
 }
 
 void VariableDeclaratorId() :
-{
-
+{Token t;
+  
 }
 {
-  < IDENTIFIER >
+  t=< IDENTIFIER >
+ {
+    if(IsInMethod && !ReturnType.equals("")) {
+      Parameter params=new Parameter(ReturnType,t.toString());
+      MethodName.getParameter().add(params);
+      ReturnType="";
+      }
 
+// Declaration des variables/Attributs des Classes
+
+     AttributeIdentifier.setName(t.toString());
+     AttributeIdentifier.setModifier(LastModifier);
+     MyMaincontroller.GetArbre().GetClassByName(CurrentClass.peek()).getAttributs().add(AttributeIdentifier);
+     AttributeIdentifier= new Parameter("","");
+      
+  }
   (
   "[" "]"
   )*
@@ -932,15 +966,36 @@ void MethodDeclaration() :
     | ";"
     )
   )
-  {IsInMethod=false; }
+  {
+    MyMaincontroller.GetArbre().GetClassByName(CurrentClass.peek()).getMethodes().add(MethodName);
+    MethodName= new Method("","public");
+    IsInMethod=false; }
 }
 
 void MethodDeclarator() :
-{
+{Token t;
 }
 {
   (
-    < IDENTIFIER > FormalParameters() ("[" "]")*
+    t=< IDENTIFIER >
+     {
+       
+    if(IsInMethod) {
+      if(ReturnType.equals(""))
+      	ReturnType="void";
+      	
+      MethodName.setName(ReturnType+"."+t.toString());
+      }
+	if(IsInBlock) {
+		if(ReturnType.equals(""))
+      		ReturnType="void";
+      		InnerMethod.setName(ReturnType+"."+t.toString());
+	   }
+		
+      
+    }
+     FormalParameters() ("[" "]")*
+   
   )
 }
 
@@ -1038,6 +1093,7 @@ void ReferenceType() :
   MyMaincontroller.GetArbre().GetClassByName(CurrentClass.peek()).getCompteurReference()+1);
   }
   IsVariableDeclare=false;
+
 }
 
 {
@@ -1061,17 +1117,24 @@ void ReferenceType() :
 
 void ClassOrInterfaceType() :
 {Token t;
+
 }
 {
   (
     t=< IDENTIFIER >
-      {if(!IsInMethod) {
+      {
+		AttributeIdentifier.setType(t.toString());
+        if(!IsInMethod) {
         MyMaincontroller.GetArbre().GetClassByName(CurrentClass.peek()).addVisibility(t.toString()); }
 
        if(IsExtended) {
         MyMaincontroller.GetArbre().GetClassByName(CurrentClass.peek()).setParent(t.toString());
         IsExtended=false;
          }
+
+           if(IsInMethod) {  
+           ReturnType=t.toString();
+           }
         
        }
     [
@@ -1081,7 +1144,7 @@ void ClassOrInterfaceType() :
     (
       LOOKAHEAD(2)
       "." 
-      < IDENTIFIER >
+      < IDENTIFIER > 
       [
         LOOKAHEAD(2)
         TypeArguments()
@@ -1173,14 +1236,25 @@ void Name() :
  * A lookahead of 2 is required below since "Name" can be followed
  * by a ".*" when used in the context of an "ImportDeclaration".
  */
+
 {
+ Token t;
+ Token t2;
 }
 {
-  < IDENTIFIER >
+  t=< IDENTIFIER > 
+
   (
     LOOKAHEAD(2)
-    "." < IDENTIFIER >
+    "." t2=< IDENTIFIER >   {
+  if(IsInBlock) {
+    Invoker=t.toString();
+    InnerMethodName=t.toString()+"."+t2.toString();
+     }
+    
+     }
   )*
+
 }
 
 void NameList() :
@@ -1572,6 +1646,19 @@ void Arguments() :
 }
 {
   "(" [ ArgumentList() ] ")"
+  {
+     if(IsInBlock) {
+      Parameter params=new Parameter("","");
+      InnerMethod.setName(InnerMethodName);
+      InnerMethod.setInvoker(Invoker);
+      InnerMethod.getParameter().add(params);
+      MethodName.getInnerMethods().add(InnerMethod);
+      Invoker="";
+      InnerMethodName="";
+      InnerMethod=new Method("","public");
+      ReturnType="";
+      }
+  }
 }
 
 void ArgumentList() :
@@ -1680,15 +1767,20 @@ void Block() :
 {
 }
 {
+  {IsInBlock=true;
+  }
   "{"
   (
     BlockStatement()
   )*
   "}"
+  {IsInBlock=false;
+  }
 }
 
 void BlockStatement() :
 {
+
 }
 {
   [
@@ -1697,6 +1789,7 @@ void BlockStatement() :
   ]
   (
     LOOKAHEAD(Modifiers() Type() < IDENTIFIER >)
+    
     LocalVariableDeclaration() ";"
   | 
     LOOKAHEAD(3)
@@ -1985,6 +2078,7 @@ void NormalAnnotation() :
 }
 {
   "@" Name() "(" [ MemberValuePairs() ] ")"
+ 
 }
 
 void MarkerAnnotation() :
@@ -1999,6 +2093,7 @@ void SingleMemberAnnotation() :
 }
 {
   "@" Name() "(" MemberValue() ")"
+  
 }
 
 void MemberValuePairs() :

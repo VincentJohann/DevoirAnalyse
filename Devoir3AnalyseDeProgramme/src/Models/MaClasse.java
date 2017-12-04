@@ -7,7 +7,7 @@ public class MaClasse {
 	private String Name;
 
 	private List<MaClasse> InnerClasses;
-	private List<Attribut> Attributs;
+	private List<Parameter> Attributs;
 	public List<Method> Methodes;
 	private int CompteurPrivate;
 	private int CompteurPublic;
@@ -25,7 +25,7 @@ public class MaClasse {
 		CompteurPublic = 0;
 		CompteurProtected = 0;
 		InnerClasses= new ArrayList<MaClasse>();
-		Attributs= new ArrayList<Attribut>();
+		Attributs= new ArrayList<Parameter>();
 		Methodes= new ArrayList<Method>();
 		VisibilityClasses= new ArrayList<String>();
 	}
@@ -96,11 +96,11 @@ public class MaClasse {
 		InnerClasses = innerClasses;
 	}
 
-	public List<Attribut> getAttributs() {
+	public List<Parameter> getAttributs() {
 		return Attributs;
 	}
 
-	public void setAttributs(List<Attribut> attributs) {
+	public void setAttributs(List<Parameter> attributs) {
 		Attributs = attributs;
 	}
 
@@ -111,6 +111,19 @@ public class MaClasse {
 	public void setMethodes(List<Method> methodes) {
 		Methodes = methodes;
 	}
+	
+	public String getMethodesString() {
+		String allMethods="";
+		for(Method myMethod : Methodes) {
+			allMethods += "   "+myMethod.getName() +"("+myMethod.getParameterString()+") \r\n";
+			for(Method inmyMethod : myMethod.getInnerMethods()) {
+				allMethods += myMethod.getInnerParameterString() +"() \r\n";
+			}
+		}
+		return allMethods;
+	}
+	
+	
 
 	public String getName() {
 		return Name;

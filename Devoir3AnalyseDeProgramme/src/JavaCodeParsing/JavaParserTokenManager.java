@@ -2,7 +2,7 @@
 package JavaCodeParsing;
 import java.io.*;
 import applicationUI.MainController;
-import Models.MaClasse;
+import Models.*;
 import java.util.Stack;
 
 /** Token Manager. */

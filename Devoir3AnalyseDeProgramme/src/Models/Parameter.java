@@ -1,9 +1,24 @@
 package Models;
 
 public class Parameter {
+private String Modifier;
 private String Name;
 private String Type;
-public Parameter(String name, String type) {
+public Parameter(String modifier, String type,String name) {
+	Modifier=modifier;
+	Name = name;
+	Type = type;
+}
+
+public String getModifier() {
+	return Modifier;
+}
+
+public void setModifier(String modifier) {
+	Modifier = modifier;
+}
+
+public Parameter( String type,String name) {
 	Name = name;
 	Type = type;
 }

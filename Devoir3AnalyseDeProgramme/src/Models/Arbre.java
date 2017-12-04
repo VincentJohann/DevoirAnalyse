@@ -136,7 +136,93 @@ public class Arbre {
 		return resultMsg;
 	}
 	
+	public String GetAnalyseMethod5Stats(){
+		InitCompleteClassList();
+		String resultMsg="Voici les statistiques de la dépendance entre classe :\r\n";
+		for(MaClasse item : CompleteClasses){
+			resultMsg+="Pour la classe: --- "+item.getName()+" ---\r\n";		
+			if(item.getMethodesString().length()>0) {
+				resultMsg+="Voici les méthodes de la classes: \r\n"+item.getMethodesString();
+
+			}else {
+				resultMsg+="Aucune méthodes externe appelée.\r\n";	
+			}
+			resultMsg+="\r\n";
+			}
+
+		return resultMsg;
+	}
 	
+
+	
+	public String GetAnalyseMethod4Stats(){
+		InitCompleteClassList();
+		String resultMsg="Voici les statistiques de la dépendance entre classe :\r\n";
+		for(MaClasse item : CompleteClasses){
+			resultMsg+="Pour la classe: --- "+item.getName()+" ---\r\n";
+			if(item.getMethodesString().length()>0) {
+				List<String> myMethodsNotUnique=CreateMethodArray();
+				List<String> myMethodsUnique=CreateMethdoUniqueArray();
+				resultMsg+="Voici les méthodes de classes externes de la classes \r\n";
+				for(String methodName:myMethodsUnique) {
+					int nbOccurency=getInnerParameterOccurency(methodName,myMethodsNotUnique);
+					resultMsg+="Nombre d'occurences: "+nbOccurency+" pour la méthode: "+methodName+"() \r\n";
+				}
+			}else {
+				resultMsg+="Aucune méthodes externe appelée.\r\n";	
+			}
+			resultMsg+="\r\n";
+			}
+
+		return resultMsg;
+	}
+	
+	
+	public int getInnerParameterOccurency(String occurency,List<String> array) {
+		int paramCount=0;
+		for( String param:array) {
+			if(param.equals(occurency)) {
+				paramCount++;
+			};
+		}
+		return paramCount;
+	}
+	
+	
+	public List<String> CreateMethodArray() {
+		List<String> myMethods=new ArrayList<String>();
+		for(MaClasse item : CompleteClasses){
+			if(item.getMethodesString().length()>0) {
+				for(Method innerItem : item.getMethodes()){
+					for(Method innerItemMethod : innerItem.getInnerMethods()){
+							myMethods.add(innerItemMethod.getName());											
+				}											
+				}				
+			}		
+			}
+		return myMethods;
+	}
+	
+	
+	public List<String> CreateMethdoUniqueArray() {
+		List<String> myMethods=new ArrayList<String>();
+		for(MaClasse item : CompleteClasses){
+			if(item.getMethodesString().length()>0) {
+				for(Method innerItem : item.getMethodes()){
+					for(Method innerItemMethod : innerItem.getInnerMethods()){
+						if (!myMethods.contains(innerItemMethod.getName())) {
+							myMethods.add(innerItemMethod.getName());	
+						}				
+				}											
+				}				
+			}		
+			}
+		return myMethods;
+	}
+	
+	public void CountMethodArray() {
+		
+	}
 	
 	public void IterateClassList(MaClasse myitem){
 		for(MaClasse item : myitem.getInnerClasses()){

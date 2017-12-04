@@ -47,22 +47,36 @@ public class MainController {
 
 	    @FXML
 	    public void Analyse1PublicPrivateStat_Click(ActionEvent event) {
+	    	if(!BrowseTextField.getText().equals(""))
 	    	ParseValidation1();
 	    }
 	    
 	    @FXML
 	    public void Analyse2Visibility_Click(ActionEvent event) {
+	    	if(!BrowseTextField.getText().equals(""))
 	    	ParseValidation2();
+	    }
+	    @FXML
+	    public void Analyse3UMLDiagram_Click(ActionEvent event) {
+	    	if(!BrowseTextField.getText().equals(""))
+	    	ParseValidation3UML();
+	    }
+	    @FXML
+	    public void Analyse4MethodAnalyse_Click(ActionEvent event) {
+	    	if(!BrowseTextField.getText().equals(""))
+	    	ParseValidation4Method();
+	    }
+	    @FXML
+	    public void Analyse5MethodAnalyse_Click(ActionEvent event) {
+	    	if(!BrowseTextField.getText().equals(""))
+	    	ParseValidation5Method();
 	    }
 	    @FXML
 	    public void BrowseButton_Click(ActionEvent event) {
 	    	SelectFile();
 	    }
 	    
-	    @FXML
-	    public void Analyse3UMLDiagram_Click(ActionEvent event) {
-	    	ParseValidation3UML();
-	    }
+	   
 
 	    @FXML
 	    void CloseButton_Click(ActionEvent event) {
@@ -111,24 +125,24 @@ public class MainController {
 	    	JavaParser parser=new JavaParser(filePath,this);
 	    	parser.ExecuteParse(3);
 	    }
-	    /*
-	    private void ParseValidation3UMLDesign() {
+	    private void ParseValidation4Method() {
 	    	
-			try {
-				Pane root;
-				FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/applicationUMLWindow/UMLWindow.fxml"));
-				fxmlLoader.setController(new UMLController());
-				Parent root1 = (Parent) fxmlLoader.load();
-				Scene newScene=new Scene(root1);
-				newScene.getStylesheets().add(getClass().getResource("/applicationUMLWindow/UMLapplication.css").toExternalForm());
-				Stage anotherStage = new Stage();
-				anotherStage.setScene(newScene);
-				anotherStage.show();
-			
-			} catch(Exception e) {
-				e.printStackTrace();
-			}
-	    }*/
+	    	String filePath=BrowseTextField.getText();;
+	    	String[] filesPath =new String[20];
+	    	filesPath[0]=filePath;
+	    	JavaParser parser=new JavaParser(filePath,this);
+	    	parser.ExecuteParse(4);
+	    }
+	    
+	    private void ParseValidation5Method() {
+	    	
+	    	String filePath=BrowseTextField.getText();;
+	    	String[] filesPath =new String[20];
+	    	filesPath[0]=filePath;
+	    	JavaParser parser=new JavaParser(filePath,this);
+	    	parser.ExecuteParse(5);
+	    }
+
 	    
 	   
 	    

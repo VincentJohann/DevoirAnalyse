@@ -2,12 +2,14 @@ public class Animal{
     private String Nom;
     private String Age;
     protected String Race;
+	protected Chien Arrold;
 
 
     public Animal(String nom, String age, String race, String action){
         this.Nom = nom;
         this.Age = age;
         this.Race = race;
+		System.out.println("test");
 
 }
 }
@@ -30,11 +32,13 @@ public class Chien extends Animal{
     }
 
     public String JappeSur(Chat chat){
+		chat2.Miaule();
         return this.Nom = " jappe sur " + chat.prenom;
     }
 
     public void Assis() {
         System.out.println(this.prenom = " est assis");
+		System.out.println(this.prenom = " est assis");
     }
 
     private void Saute(){
