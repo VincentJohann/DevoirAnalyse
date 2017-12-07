@@ -16,7 +16,7 @@ public class Animal{
 
 
 
-public class Chien extends Animal{
+public class Chien extends Animal,Mamamia implements BateauEvent,SoupeAuPoidEatEvent{
     private String Nom;
     private String Age;
     protected String Race;

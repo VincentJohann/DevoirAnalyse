@@ -31,7 +31,6 @@ public class Arbre {
 	
 	
 	public MaClasse GetClassListIterate(MaClasse itemClass, String className){
-		String classList="Liste des classe :\r\n";
 		for(MaClasse item : itemClass.getInnerClasses()){
 			if(className.equals(item.getName())){
 				return item;
@@ -65,7 +64,6 @@ public class Arbre {
 	}
 	
 	public void InitCompleteClassList(){
-		String classList="Liste des classe :\r\n";
 		for(MaClasse item : Classes){
 			CompleteClasses.add(item);
 			if(item.getInnerClasses().size()>0) {
@@ -126,8 +124,12 @@ public class Arbre {
 		for(MaClasse item : CompleteClasses){
 			resultMsg+="Pour la classe: --- "+item.getName()+" ---\r\n";		
 			resultMsg+="Voici les classes associée(Association):"+item.GetVisibilitys();
-			if(!item.getParent().equals("")) {
-				resultMsg+="Cette classe est une classe enfant de :"+item.getParent();
+			if(item.getParents().size()>0) {
+				resultMsg+=item.getParentToString();
+				resultMsg+="\r\n";
+			}
+			if(item.getInterfaces().size()>0) {
+				resultMsg+=item.getInterfacesToString();
 				resultMsg+="\r\n";
 			} 
 			resultMsg+="\r\n";
@@ -161,12 +163,16 @@ public class Arbre {
 		for(MaClasse item : CompleteClasses){
 			resultMsg+="Pour la classe: --- "+item.getName()+" ---\r\n";
 			if(item.getMethodesString().length()>0) {
-				List<String> myMethodsNotUnique=CreateMethodArray();
-				List<String> myMethodsUnique=CreateMethdoUniqueArray();
+				List<String> myMethodsNotUnique=CreateMethodArray(item);
+				List<String> myMethodsUnique=CreateMethdoUniqueArray(item);
+				if(myMethodsUnique.size()>0) {
 				resultMsg+="Voici les méthodes de classes externes de la classes \r\n";
 				for(String methodName:myMethodsUnique) {
 					int nbOccurency=getInnerParameterOccurency(methodName,myMethodsNotUnique);
 					resultMsg+="Nombre d'occurences: "+nbOccurency+" pour la méthode: "+methodName+"() \r\n";
+				}
+				}else {
+					resultMsg+="Aucune méthodes externe appelée.\r\n";	
 				}
 			}else {
 				resultMsg+="Aucune méthodes externe appelée.\r\n";	
@@ -189,26 +195,26 @@ public class Arbre {
 	}
 	
 	
-	public List<String> CreateMethodArray() {
+	public List<String> CreateMethodArray(MaClasse myClass) {
 		List<String> myMethods=new ArrayList<String>();
-		for(MaClasse item : CompleteClasses){
-			if(item.getMethodesString().length()>0) {
-				for(Method innerItem : item.getMethodes()){
+		//for(MaClasse item : CompleteClasses){
+			if(myClass.getMethodesString().length()>0) {
+				for(Method innerItem : myClass.getMethodes()){
 					for(Method innerItemMethod : innerItem.getInnerMethods()){
 							myMethods.add(innerItemMethod.getName());											
 				}											
 				}				
 			}		
-			}
+			//}
 		return myMethods;
 	}
 	
 	
-	public List<String> CreateMethdoUniqueArray() {
+	public List<String> CreateMethdoUniqueArray(MaClasse myClass) {
 		List<String> myMethods=new ArrayList<String>();
-		for(MaClasse item : CompleteClasses){
-			if(item.getMethodesString().length()>0) {
-				for(Method innerItem : item.getMethodes()){
+		//for(MaClasse item : CompleteClasses){
+			if(myClass.getMethodesString().length()>0) {
+				for(Method innerItem : myClass.getMethodes()){
 					for(Method innerItemMethod : innerItem.getInnerMethods()){
 						if (!myMethods.contains(innerItemMethod.getName())) {
 							myMethods.add(innerItemMethod.getName());	
@@ -216,7 +222,7 @@ public class Arbre {
 				}											
 				}				
 			}		
-			}
+			//}
 		return myMethods;
 	}
 	

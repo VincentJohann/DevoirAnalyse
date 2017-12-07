@@ -14,12 +14,14 @@ public class MaClasse {
 	private int CompteurProtected;
 	private int CompteurSimple;
 	private int CompteurReference;
-	private String Parent;
+	private List<String> Parents;
+	private List<String> Interfaces;
 	private List<String> VisibilityClasses;
 	
 
 	public MaClasse(String name) {
-		Parent="";
+		Parents=new ArrayList<String>();
+		Interfaces=new ArrayList<String>();
 		Name = name;
 		CompteurPrivate = 0;
 		CompteurPublic = 0;
@@ -30,12 +32,47 @@ public class MaClasse {
 		VisibilityClasses= new ArrayList<String>();
 	}
 	
-	public String getParent() {
-		return Parent;
+	public List<String> getParent() {
+		return Parents;
+	}
+	
+	public String getParentToString() {
+		String parents="Class parents : \r\n";
+		for(String parentName:Parents) {
+			parents+=" - "+parentName+ "\r\n";
+		}
+		return parents;
 	}
 
-	public void setParent(String parent) {
-		Parent = parent;
+	public List<String> getParents() {
+		return Parents;
+	}
+
+	public void setParents(List<String> parents) {
+		Parents = parents;
+	}
+
+	
+	public String getInterfacesToString() {
+		String interfaces="Class interfaces : \r\n";
+		for(String interfaceName:Interfaces) {
+			interfaces+=" - "+interfaceName+ "\r\n";
+		}
+		return interfaces;
+	}
+	public List<String> getInterfaces() {
+		return Interfaces;
+	}
+
+	public void setInterfaces(List<String> interfaces) {
+		Interfaces = interfaces;
+	}
+	
+	public void addInterface(String interfaceName) {
+		Interfaces.add(interfaceName);
+	}
+	public void addParent(String parent) {
+		Parents.add(parent);
 	}
 
 	public void addVisibility(String newVisibility) {
@@ -56,11 +93,11 @@ public class MaClasse {
 	}
     
     public String GetVisibilitys() {
-    	String strList="class "+Name+" visibility :[";
+    	String strList="Voici les classes associée(Visibilitée):\r\n";
     	for(String item : VisibilityClasses) {
-    		strList+=" "+item+", ";    		
+    		strList+=" - "+item+"\r\n ";    		
     	}
-    	strList+="]\r\n ";
+    	strList+="\r\n ";
     	return strList;
 	}
 

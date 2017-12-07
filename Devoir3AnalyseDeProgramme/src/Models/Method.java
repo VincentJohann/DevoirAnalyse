@@ -103,7 +103,6 @@ public class Method {
 				
 			}
 		}
-		String test=Name;
 		return params;
 	}
 	
@@ -112,7 +111,6 @@ public class Method {
 		String paramStr="";
 		List<String> uniqueList=CreateInnerParameterString();
 		for( String param:uniqueList) {
-			int nbOccurence=getInnerParameterOccurency(param);
 			paramStr+="- Appel interne: "+param;
 		}
 		return paramStr;
