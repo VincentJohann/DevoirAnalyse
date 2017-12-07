@@ -4,6 +4,8 @@ import java.io.*;
 import applicationUI.MainController;
 import Models.*;
 import java.util.Stack;
+import java.util.ArrayList;
+import java.util.List;
 
 /** Token Manager. */
 public class JavaParserTokenManager implements JavaParserConstants

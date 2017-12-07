@@ -52,6 +52,9 @@ import java.io.*;
 import applicationUI.MainController;
 import Models.*;
 import java.util.Stack;
+import java.util.ArrayList;
+import java.util.List;
+
 public class JavaParser
 {
   
@@ -60,6 +63,8 @@ public class JavaParser
   private MainController MyMaincontroller;
 
   private InputStream inputStream = null;
+
+  private List<String> Filenames;
 
   private String Filename;
 
@@ -90,6 +95,39 @@ public class JavaParser
  private String InMethodCallerType; 
   
 
+
+ public JavaParser(List<String> filenames, MainController maincontroller)
+  {
+    this (System.in);
+    Filenames = filenames;
+    MethodName=new Method("","public");
+    InnerMethod=new Method("","public");
+    IsInClass = false;
+    IsInMethod =false;
+    IsInBlock=false;
+    IsInConstructor=false;
+    IsVariableDeclare=false;
+    IsExtended=false;
+    CurrentClass = new Stack<String>();
+    CurrentClass.push("");
+    LastModifier="";
+    Invoker="";
+    AttributeIdentifier=new Parameter("","");
+    ReturnType="";
+    InMethodCallerType="";
+    InnerMethodName="";
+    MyMaincontroller = maincontroller;
+    
+   /* try
+    {
+      inputStream = new FileInputStream(new File(filename));
+      ReInit(inputStream);
+    }
+    catch (Exception e)
+    {
+      e.printStackTrace();
+    }*/
+  }
   /**
      * Constructor for JavaParser.
      * @param fileName name of the file to parse
@@ -154,10 +192,12 @@ public class JavaParser
   public void ExecuteParse(int choice)
   {
     String parseMessage = " -----  Resultat de l'analyse ----- " + System.getProperty("line.separator");
-    try
+    for(String filename:Filenames)    {
+       try
     {
+      JavaParser tempParse= new JavaParser(filename,MyMaincontroller);
       //parser = new JavaParser(args[0],MyMaincontroller);     
-      this.CompilationUnit();
+      tempParse.CompilationUnit();
       parseMessage += "Java Parser Version 1.7:  Java program parsed successfully." + System.getProperty("line.separator");
     }
     catch (ParseException e)
@@ -165,8 +205,8 @@ public class JavaParser
       parseMessage += (e.getMessage());
       parseMessage += "Java Parser Version 1.7:  Encountered errors during parse." + System.getProperty("line.separator");
     }
-    
-    ReturnResult(choice);
+        }
+	ReturnResult(choice);
     MyMaincontroller.ShowAnalyseResult();
   }
 

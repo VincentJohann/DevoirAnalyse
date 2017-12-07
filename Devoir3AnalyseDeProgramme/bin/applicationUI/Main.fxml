@@ -2,6 +2,7 @@
 
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.RadioButton?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
@@ -10,7 +11,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<GridPane maxHeight="400" maxWidth="800" minHeight="400" minWidth="680" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.112" xmlns:fx="http://javafx.com/fxml/1" fx:controller="applicationUI.MainController">
+<GridPane maxHeight="400" maxWidth="800" minHeight="400" minWidth="680" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="applicationUI.MainController">
   <columnConstraints>
     <ColumnConstraints hgrow="SOMETIMES" maxWidth="600.0" minWidth="6.0" prefWidth="600.0" />
     <ColumnConstraints hgrow="SOMETIMES" maxWidth="594.0" minWidth="0.0" prefWidth="0.0" />
@@ -23,8 +24,8 @@
    <children>
             <AnchorPane maxHeight="400.0" maxWidth="600.0" minHeight="400.0" minWidth="600.0" prefHeight="400.0" prefWidth="600.0" VBox.vgrow="ALWAYS">
                <children>
-                  <Button fx:id="CloseButton" alignment="TOP_LEFT" layoutX="514.0" layoutY="351.0"  mnemonicParsing="false" onAction="#CloseButton_Click" prefHeight="25.0" prefWidth="58.0" text="Quitter"  />
-                  <Label layoutX="26.0" layoutY="64.0" prefHeight="18.0" prefWidth="383.0" text="Veuiller sélectionner le répertoire source de votre projet " />
+                  <Button fx:id="CloseButton" alignment="TOP_LEFT" layoutX="514.0" layoutY="351.0" mnemonicParsing="false" onAction="#CloseButton_Click" prefHeight="25.0" prefWidth="58.0" text="Quitter" />
+                  <Label layoutX="26.0" layoutY="64.0" prefHeight="18.0" prefWidth="117.0" text="Veuiller sélectionner : " />
                   <Button fx:id="BrowseButton" layoutX="362.0" layoutY="88.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="30.0" minWidth="90.0" mnemonicParsing="false" onAction="#BrowseButton_Click" prefHeight="25.0" prefWidth="90.0" text="Naviguer" />
                   <TextField fx:id="BrowseTextField" layoutX="20.0" layoutY="91.0" prefHeight="25.0" prefWidth="310.0" />
                   <Label layoutX="229.0" layoutY="4.0" prefHeight="43.0" prefWidth="183.0" text=" Analyseur de code">
@@ -32,11 +33,13 @@
                         <Font name="System Bold" size="20.0" />
                      </font>
                   </Label>
-                  <Button styleClass="my-special-button" layoutX="20.0" layoutY="126.0" maxWidth="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#Analyse1PublicPrivateStat_Click" prefHeight="30.0" prefWidth="425.0" text="Analyse de la portée des attributs des classes d’un programme" />
-                  <Button styleClass="my-special-button" layoutX="20.0" layoutY="160.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="425.0" onAction="#Analyse2Visibility_Click" text="Analyse de la visibilité entre classes d’un programme" />
-                  <Button styleClass="my-special-button" layoutX="19.0" layoutY="195.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="425.0" onAction="#Analyse3UMLDiagram_Click" text="Reverse Engineering - Extraction du modèle objet (diagramme de classes)" />
-                  <Button styleClass="my-special-button" layoutX="20.0" layoutY="230.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="425.0" onAction="#Analyse4MethodAnalyse_Click" text="Analyse de la dépendance entre classes d’un programme" />
-                  <Button styleClass="my-special-button" layoutX="19.0" layoutY="264.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="425.0" onAction="#Analyse5MethodAnalyse_Click" text=" Extraction du graphe d’appels directs entre méthodes d’un programme" />
+                  <Button layoutX="20.0" layoutY="126.0" maxWidth="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#Analyse1PublicPrivateStat_Click" prefHeight="30.0" prefWidth="425.0" styleClass="my-special-button" text="Analyse de la portée des attributs des classes d’un programme" />
+                  <Button layoutX="20.0" layoutY="160.0" mnemonicParsing="false" onAction="#Analyse2Visibility_Click" prefHeight="30.0" prefWidth="425.0" styleClass="my-special-button" text="Analyse de la visibilité entre classes d’un programme" />
+                  <Button layoutX="19.0" layoutY="195.0" mnemonicParsing="false" onAction="#Analyse3UMLDiagram_Click" prefHeight="30.0" prefWidth="425.0" styleClass="my-special-button" text="Reverse Engineering - Extraction du modèle objet (diagramme de classes)" />
+                  <Button layoutX="20.0" layoutY="230.0" mnemonicParsing="false" onAction="#Analyse4MethodAnalyse_Click" prefHeight="30.0" prefWidth="425.0" styleClass="my-special-button" text="Analyse de la dépendance entre classes d’un programme" />
+                  <Button layoutX="19.0" layoutY="264.0" mnemonicParsing="false" onAction="#Analyse5MethodAnalyse_Click" prefHeight="30.0" prefWidth="425.0" styleClass="my-special-button" text=" Extraction du graphe d’appels directs entre méthodes d’un programme" />
+            <RadioButton fx:id="SelectFileRadioBt" layoutX="153.0" layoutY="65.0" mnemonicParsing="false" text="Fichier" />
+            <RadioButton fx:id="SelectFolderRadioBt" layoutX="239.0" layoutY="65.0" mnemonicParsing="false" text="Repertoire entier" />
                </children>
             </AnchorPane>
    </children>

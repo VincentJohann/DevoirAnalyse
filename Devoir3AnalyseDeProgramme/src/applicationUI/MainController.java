@@ -4,6 +4,8 @@ import java.awt.Dimension;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
@@ -20,18 +22,26 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
+import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
-import applicationUMLWindow.*;
 
 
 public class MainController {
 
 		public Arbre Arbre;
 		public String  ResultMsg;
+		public ToggleGroup FileOrFolderSelection;
 	
+		@FXML
+	    private RadioButton SelectFileRadioBt;
+		
+		@FXML
+	    private RadioButton SelectFolderRadioBt;
+		
 	    @FXML
 	    public void initialize() {
 	    	InitValue();
@@ -47,33 +57,44 @@ public class MainController {
 
 	    @FXML
 	    public void Analyse1PublicPrivateStat_Click(ActionEvent event) {
+	    	ResultMsg="";
 	    	if(!BrowseTextField.getText().equals(""))
-	    	ParseValidation1();
+	    		ParseValidationMethod(1);
 	    }
 	    
 	    @FXML
 	    public void Analyse2Visibility_Click(ActionEvent event) {
+	    	ResultMsg="";
 	    	if(!BrowseTextField.getText().equals(""))
-	    	ParseValidation2();
+	    		ParseValidationMethod(2);
 	    }
 	    @FXML
 	    public void Analyse3UMLDiagram_Click(ActionEvent event) {
+	    	ResultMsg="";
 	    	if(!BrowseTextField.getText().equals(""))
-	    	ParseValidation3UML();
+	    	ParseValidationMethod(3);
 	    }
 	    @FXML
 	    public void Analyse4MethodAnalyse_Click(ActionEvent event) {
+	    	ResultMsg="";
 	    	if(!BrowseTextField.getText().equals(""))
-	    	ParseValidation4Method();
+	    	ParseValidationMethod(4);
 	    }
 	    @FXML
 	    public void Analyse5MethodAnalyse_Click(ActionEvent event) {
+	    	ResultMsg="";
 	    	if(!BrowseTextField.getText().equals(""))
-	    	ParseValidation5Method();
+	    	ParseValidationMethod(5);
 	    }
 	    @FXML
 	    public void BrowseButton_Click(ActionEvent event) {
-	    	SelectFile();
+	    	ResultMsg="";
+	    	if(SelectFileRadioBt.isSelected()){
+	    		SelectFile();
+		    	return;
+	    	}
+	    	SelectFolder();
+	    	
 	    }
 	    
 	   
@@ -100,47 +121,85 @@ public class MainController {
 
 	    }
 	    
-	    
+	    private void SelectFolder() {
+	    	JFileChooser fc = new JFileChooser();
+	    	File workingDirectory = new File(System.getProperty("user.dir"));
+	    	fc.setCurrentDirectory(workingDirectory); // start at application current directory
+	    	fc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+	    	JFrame parentFrame = new JFrame();
+	    	int returnVal = fc.showOpenDialog(parentFrame);
+	    	if(returnVal == JFileChooser.APPROVE_OPTION) {
+	    	    //File yourFolder = fc.getSelectedFile();
+	    	    BrowseTextField.setText(fc.getSelectedFile().getAbsolutePath());
+	    	}
 
-	    private void ParseValidation1() {
-	    	String filePath=BrowseTextField.getText();;
-	    	String[] filesPath =new String[20];
-	    	filesPath[0]=filePath;
-	    	JavaParser parser=new JavaParser(filePath,this);
+	    }
+	    
+	    private List<String> GetSelectedFiles(){
+	    	List<String> allPaths= new ArrayList<String>();
+	    	if(SelectFileRadioBt.isSelected()){
+		    	String filePath=BrowseTextField.getText();
+		    	allPaths.add(filePath);
+		    	
+	    	}else{
+	    		allPaths=GetAllFilesFromPath();
+	    	}
+	    	
+	    	return allPaths;
+	    	
+	    }
+	    
+	    private List<String> GetAllFilesFromPath() {
+	    	List<String> results = new ArrayList<String>();
+
+
+	    	File[] files = new File(BrowseTextField.getText()).listFiles();
+	    	//If this pathname does not denote a directory, then listFiles() returns null. 
+
+	    	for (File file : files) {
+	    	    if (file.isFile() && getFileExtension(file).equals("java") ) {
+	    	        results.add(file.getAbsolutePath());
+	    	    }
+	    	}
+	    	return results;
+
+	    }
+	    
+	    private String getFileExtension(File file) {
+	        String name = file.getName();
+	        try {
+	            return name.substring(name.lastIndexOf(".") + 1).toLowerCase();
+	        } catch (Exception e) {
+	            return "";
+	        }
+	    }
+
+	    /*private void ParseValidation1() {
+	    	List<String> allPaths= GetSelectedFiles();
+	    	JavaParser parser=new JavaParser(allPaths,this);
 	    	parser.ExecuteParse(1);
 
 	    }
 	    private void ParseValidation2() {
-	    	String filePath=BrowseTextField.getText();;
-	    	String[] filesPath =new String[20];
-	    	filesPath[0]=filePath;
-	    	JavaParser parser=new JavaParser(filePath,this);
-	    	parser.ExecuteParse(2);
+	    	List<String> allPaths= GetSelectedFiles();
+	    	JavaParser parser=new JavaParser(allPaths,this);
+	    	parser.ExecuteParse(1);
 	    }
 	    private void ParseValidation3UML() {
-	    	
-	    	String filePath=BrowseTextField.getText();;
-	    	String[] filesPath =new String[20];
-	    	filesPath[0]=filePath;
-	    	JavaParser parser=new JavaParser(filePath,this);
-	    	parser.ExecuteParse(3);
+	    	List<String> allPaths= GetSelectedFiles();
+	    	JavaParser parser=new JavaParser(allPaths,this);
+	    	parser.ExecuteParse(1);
 	    }
 	    private void ParseValidation4Method() {
-	    	
-	    	String filePath=BrowseTextField.getText();;
-	    	String[] filesPath =new String[20];
-	    	filesPath[0]=filePath;
-	    	JavaParser parser=new JavaParser(filePath,this);
-	    	parser.ExecuteParse(4);
-	    }
+	    	List<String> allPaths= GetSelectedFiles();
+	    	JavaParser parser=new JavaParser(allPaths,this);
+	    	parser.ExecuteParse(1);
+	    }*/
 	    
-	    private void ParseValidation5Method() {
-	    	
-	    	String filePath=BrowseTextField.getText();;
-	    	String[] filesPath =new String[20];
-	    	filesPath[0]=filePath;
-	    	JavaParser parser=new JavaParser(filePath,this);
-	    	parser.ExecuteParse(5);
+	    private void ParseValidationMethod(int choice) {
+	    	List<String> allPaths= GetSelectedFiles();
+	    	JavaParser parser=new JavaParser(allPaths,this);
+	    	parser.ExecuteParse(choice);
 	    }
 
 	    
@@ -163,6 +222,12 @@ public class MainController {
 	    
 	    private void InitValue() {
 	    	Arbre=new Arbre();
+	    	
+	    	FileOrFolderSelection = new ToggleGroup();
+	    	SelectFileRadioBt.setToggleGroup(FileOrFolderSelection);
+	    	SelectFileRadioBt.setSelected(true);
+	    	SelectFolderRadioBt.setToggleGroup(FileOrFolderSelection);
+	    	
 	    }
 	    
 	    public void AddClass(MaClasse maClasse){
@@ -180,7 +245,7 @@ public class MainController {
 	    } 
 	    
 	    public void SetResultMsg(String msg){
-	    	ResultMsg=msg;
+	    	ResultMsg+=msg;
 	    	
 	    	} 
 	    
