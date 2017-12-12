@@ -3,7 +3,8 @@ package Models;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Method {
+public class Method 
+{
 	private String Name;
 	private String Block;
 	private boolean IsPublic;
@@ -13,143 +14,167 @@ public class Method {
 	private List<Method> InnerMethods;
 	private String Invoker;
 	
-	public String getInvoker() {
+	public String getInvoker() 
+	{
 		return Invoker;
 	}
 
-	public void setInvoker(String invoker) {
+	public void setInvoker(String invoker) 
+	{
 		Invoker = invoker;
 	}
 
-	public Method(String name, String accessModifier ) {
+	public Method(String name, String accessModifier ) 
+	{
 		Name = name;
 		Parameter= new ArrayList<Parameter>();
 		InnerMethods= new ArrayList<Method>();
 		SetAccessModifier(accessModifier);
-		
 	}
 	
-	public List<Method> getInnerMethods() {
+	public List<Method> getInnerMethods() 
+	{
 		return InnerMethods;
 	}
 
-	public void setInnerMethods(List<Method> innerMethods) {
+	public void setInnerMethods(List<Method> innerMethods) 
+	{
 		InnerMethods = innerMethods;
 	}
 
-	public String getName() {
+	public String getName() 
+	{
 		return Name;
 	}
 
-	public void setName(String name) {
+	public void setName(String name) 
+	{
 		Name = name;
 	}
 
-	public String getBlock() {
+	public String getBlock() 
+	{
 		return Block;
 	}
-
 	
-	public void addToBlock(String block) {
+	public void addToBlock(String block) 
+	{
 		Block += block;
 	}
 	
-	public void setBlock(String block) {
+	public void setBlock(String block) 
+	{
 		Block = block;
 	}
 
-	public boolean isIsPublic() {
+	public boolean isIsPublic() 
+	{
 		return IsPublic;
 	}
 
-	public void setIsPublic(boolean isPublic) {
+	public void setIsPublic(boolean isPublic) 
+	{
 		IsPublic = isPublic;
 	}
 
-	public boolean isIsPrivate() {
+	public boolean isIsPrivate() 
+	{
 		return IsPrivate;
 	}
 
-	public void setIsPrivate(boolean isPrivate) {
+	public void setIsPrivate(boolean isPrivate) 
+	{
 		IsPrivate = isPrivate;
 	}
 
-	public boolean isIsProtected() {
+	public boolean isIsProtected() 
+	{
 		return IsProtected;
 	}
 
-	public void setIsProtected(boolean isProtected) {
+	public void setIsProtected(boolean isProtected) 
+	{
 		IsProtected = isProtected;
 	}
 
-	public List<Parameter> getParameter() {
+	public List<Parameter> getParameter() 
+	{
 		return Parameter;
 	}
 	
-	public String getParameterString() {
+	public String getParameterString() 
+	{
 		String paramStr="";
-		for( Parameter param:Parameter) {
-			paramStr+=param.getType()+" "+param.getName()+" , ";
+		for(int i=0;i<Parameter.size();i++) {
+			paramStr+=Parameter.get(i).getType()+" "+Parameter.get(i).getName();
+			if(i+1<Parameter.size()) {
+					if(Parameter.get(i+1)!=null)
+							paramStr+=" , ";
+			}
 		}
 		return paramStr;
 	}
 	
-	
-	public List<String> CreateInnerParameterString() {
+	// retourne les parametres des methodes internes
+	public List<String> CreateInnerParameterString() 
+	{
 		List<String> params=new ArrayList<String>();
-		for( Method param1:InnerMethods) {
-				if (!params.contains(param1.getName())) {
-					params.add(param1.getName());
-				
+		for( Method param1:InnerMethods) 
+		{
+			if (!params.contains(param1.getName())) 
+			{
+				params.add(param1.getName());
 			}
 		}
 		return params;
 	}
 	
-	
-	public String getInnerParameterString() {
+	public String getInnerParameterString()
+	{
 		String paramStr="";
 		List<String> uniqueList=CreateInnerParameterString();
-		for( String param:uniqueList) {
+		for( String param:uniqueList) 
+		{
 			paramStr+="- Appel interne: "+param;
 		}
 		return paramStr;
 	}
 	
-	public int getInnerParameterOccurency(String occurency) {
+	public int getInnerParameterOccurency(String occurency) 
+	{
 		int paramCount=0;
-		for( Method param:InnerMethods) {
-			if(param.getName().equals(occurency)) {
+		for(Method param:InnerMethods) 
+		{
+			if(param.getName().equals(occurency))
+			{
 				paramCount++;
-			};
+			}
 		}
 		return paramCount;
 	}
-	
-	
-	
 
-	public void setParameter(List<Parameter> parameter) {
+	public void setParameter(List<Parameter> parameter) 
+	{
 		Parameter = parameter;
 	}
-
 	
-	
-	
-	public void SetAccessModifier(String modifier) {
+	public void SetAccessModifier(String modifier) 
+	{
 		IsPublic = false;
 		IsPrivate = false;
-		IsProtected = false; 		
-		switch(modifier) {
-		case "public": 
-			IsPublic = true;
-			break;
-		case "private": 
-			IsPrivate = true;
-			break;
-		case "protected": 
-			IsProtected = true;
-			break;
+		IsProtected = false;
+		
+		switch(modifier) 
+		{
+			case "public": 
+				IsPublic = true;
+				break;
+			case "private": 
+				IsPrivate = true;
+				break;
+			case "protected": 
+				IsProtected = true;
+				break;
 		}
 	}
 }

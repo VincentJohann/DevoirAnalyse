@@ -32,6 +32,7 @@ public class Chien extends Animal,Mamamia implements BateauEvent,SoupeAuPoidEatE
     }
 
     public String JappeSur(Chat chat){
+		chat.SeDefend();
 		chat2.Miaule();
         return this.Nom = " jappe sur " + chat.prenom;
     }

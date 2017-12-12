@@ -54,7 +54,7 @@ public class JavaParser implements JavaParserConstants {
     Filenames=new ArrayList<String>();
     Filenames.addAll(filenames);
     MyMaincontroller = maincontroller;
-       InitValue();
+    InitValue();
 
   }
   /**
@@ -81,25 +81,26 @@ public class JavaParser implements JavaParserConstants {
     }
   }
 
-  public void InitValue() {
-    MethodName=new Method("","public");
-    InnerMethod=new Method("","public");
-    IsInClass = false;
-    IsInMethod =false;
-    IsInBlock=false;
-    IsImplements=false;
-    IsInConstructor=false;
-    IsVariableDeclare=false;
-    IsExtended=false;
-    CurrentClass = new Stack<String>();
-    CurrentClass.push("");
-    LastModifier="";
-    Invoker="";
-    AttributeIdentifier=new Parameter("","");
-    ReturnType="";
-    InMethodCallerType="";
-    InnerMethodName="";
-    }
+        public void InitValue()
+        {
+            MethodName=new Method("","public");
+            InnerMethod=new Method("","public");
+            IsInClass = false;
+            IsInMethod =false;
+            IsInBlock=false;
+            IsImplements=false;
+            IsInConstructor=false;
+            IsVariableDeclare=false;
+            IsExtended=false;
+            CurrentClass = new Stack<String>();
+            CurrentClass.push("");
+            LastModifier="";
+            Invoker="";
+            AttributeIdentifier=new Parameter("","");
+            ReturnType="";
+            InMethodCallerType="";
+            InnerMethodName="";
+        }
   JavaParser(JavaCharStream stream, MainController maincontroller)
   {
 
@@ -130,29 +131,26 @@ public class JavaParser implements JavaParserConstants {
     String parseMessage = " -----  Resultat de l'analyse ----- " + System.getProperty("line.separator");
     for(String filename:Filenames)
     {
-
-
-       try {
-      JavaParser  tempParse= new JavaParser(filename,MyMaincontroller);
        try
-    {
-
-      //parser = new JavaParser(args[0],MyMaincontroller);     
-      tempParse.CompilationUnit();
-      parseMessage += "Java Parser Version 1.7:  Java program parsed successfully." + System.getProperty("line.separator");
-      InitValue();
-    }
-    catch (ParseException e)
-    {
-      parseMessage += (e.getMessage());
-      parseMessage += "Java Parser Version 1.7:  Encountered errors during parse." + System.getProperty("line.separator");
-    }
-
-      } catch (Exception e) {
-        System.out.println("Java Parser Version 1.7:  File " + filename + " not found.");
+       {
+                JavaParser  tempParse= new JavaParser(filename,MyMaincontroller);
+                try
+                {
+                      tempParse.CompilationUnit();
+                      parseMessage += "Java Parser Version 1.7:  Java program parsed successfully." + System.getProperty("line.separator");
+                      InitValue();
+                }
+                catch (ParseException e)
+                    {
+                      parseMessage += (e.getMessage());
+                      parseMessage += "Java Parser Version 1.7:  Encountered errors during parse." + System.getProperty("line.separator");
+                    }
 
       }
-
+      catch (Exception e)
+      {
+        System.out.println("Java Parser Version 1.7:  File " + filename + " not found.");
+      }
     }
         ReturnResult(choice);
     MyMaincontroller.ShowAnalyseResult();
@@ -403,6 +401,7 @@ public class JavaParser implements JavaParserConstants {
       else
       {
         CurrentClass.push(t.toString());
+        // Trouve class parent de l'Arbre pour y ajouter la classe interne
         MyMaincontroller.AddInnerClass(newClass, CurrentClass.get(1).toString());
       }
     }
@@ -4370,11 +4369,6 @@ public class JavaParser implements JavaParserConstants {
     return false;
   }
 
-  private boolean jj_3R_52() {
-    if (jj_scan_token(PRIVATE)) return true;
-    return false;
-  }
-
   private boolean jj_3R_265() {
     if (jj_scan_token(LBRACE)) return true;
     Token xsp;
@@ -4383,6 +4377,11 @@ public class JavaParser implements JavaParserConstants {
       if (jj_3R_278()) { jj_scanpos = xsp; break; }
     }
     if (jj_scan_token(RBRACE)) return true;
+    return false;
+  }
+
+  private boolean jj_3R_52() {
+    if (jj_scan_token(PRIVATE)) return true;
     return false;
   }
 

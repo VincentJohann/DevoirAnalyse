@@ -33,12 +33,14 @@ import org.eclipse.jface.dialogs.MessageDialog;
  * @see org.eclipse.core.commands.IHandler
  * @see org.eclipse.core.commands.AbstractHandler
  */
-public class SampleHandler extends AbstractHandler {
+public class SampleHandler extends AbstractHandler 
+{
    public IProject CurrentProject;
    public String ProjectDataText;
 	
 	@Override
-	public Object execute(ExecutionEvent event) throws ExecutionException {
+	public Object execute(ExecutionEvent event) throws ExecutionException 
+	{
 		ProjectDataText="";				
         // Get the root of the workspace
         IWorkspace workspace = ResourcesPlugin.getWorkspace();
@@ -47,24 +49,28 @@ public class SampleHandler extends AbstractHandler {
         IProject[] projects = root.getProjects();  
         // project selector window
         
-        if(projects.length==0) {
+        if(projects.length==0) 
+        {
         	IWorkbenchWindow window = HandlerUtil.getActiveWorkbenchWindowChecked(event);
     		MessageDialog.openInformation(
     				window.getShell(),
     				"ASTAnalyseProgrammeDevoir3",
     				"Aucun projet disponible");
-        }else {
+        }
+        else 
+        {
         	ShowChoiceWindow(projects);
         	CreateProjectString(event);
         }
-
         return null;
     }
 
-	public void ShowChoiceWindow(IProject[] projects) {
+	public void ShowChoiceWindow(IProject[] projects) 
+	{
 		//Creation de la liste de choix
 		 String[] choices = new String[projects.length];
-	        for(int i=0;i<projects.length;i++) {
+	        for(int i=0;i<projects.length;i++) 
+	        {
 	        	choices[i]=projects[i].getName();
 	        }
 	        
@@ -75,39 +81,45 @@ public class SampleHandler extends AbstractHandler {
 	            choices[0]); // Initial choice	
 	        
 	      	//set Selected Project
-	        for(int i=0;i<projects.length;i++) {
+	        for(int i=0;i<projects.length;i++)
+	        {
 	        	//Dans notre cas on recupere seuelement le projet selectionné.
-	        	if(contains(projects[i].getName(),input)) {
+	        	if(contains(projects[i].getName(),input)) 
+	        	{
 	        		CurrentProject=projects[i];
 	        	}
 	        }	
 	}
 	
-	public boolean contains( String contenant, String contenu ) {
+	public boolean contains( String contenant, String contenu ) 
+	{
 		contenant = contenant == null ? "" : contenant;
 		  contenu = contenu == null ? "" : contenu;
 		  return contenant.toLowerCase().contains( contenu.toLowerCase() );
-		}
+	}
+	
 	// La méthode principale
-	public void CreateProjectString(ExecutionEvent event) {
-		ProjectDataText+="Project Name: "+CurrentProject.getName()+"\n\r";
+	public void CreateProjectString(ExecutionEvent event) 
+	{
+		ProjectDataText += "Project Name: "+CurrentProject.getName()+"\n\r";
 		
-		
-		try {
+		try 
+		{
 			IJavaProject javaProject = JavaCore.create(CurrentProject);
 			printPackageInfos(javaProject);
-
-		} catch (JavaModelException  e) {
+		} 
+		
+		catch (JavaModelException  e) 
+		{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
+
 		AfficheResultat();
-		
-		
 	}
 	
-	public void AfficheResultat() {
+	public void AfficheResultat() 
+	{
 		JTextArea textArea = new JTextArea(ProjectDataText);
         JScrollPane scrollPane = new JScrollPane(textArea);  
         textArea.setLineWrap(true);  
@@ -116,47 +128,51 @@ public class SampleHandler extends AbstractHandler {
         JOptionPane.showMessageDialog(null, scrollPane, "Resultat des analyses",  
                                        JOptionPane.DEFAULT_OPTION);
 	}
-	
 
-	private void printPackageInfos(IJavaProject javaProject) throws JavaModelException {
+	private void printPackageInfos(IJavaProject javaProject) throws JavaModelException 
+	{
 		IPackageFragment[] packages = javaProject.getPackageFragments();
-		for (IPackageFragment mypackage : packages) {
+		for (IPackageFragment mypackage : packages) 
+		{
 			// Package fragments include all packages in the
 			// classpath
 			// We will only look at the package from the source
 			// folder
-			// K_BINARY would include also included JARS, e.g.
-			// rt.jar
-			if (mypackage.getKind() == IPackageFragmentRoot.K_SOURCE) {
+			if (mypackage.getKind() == IPackageFragmentRoot.K_SOURCE) 
+			{
 				ProjectDataText+="Dans Package " + mypackage.getElementName()+"\n\r";
 				printICompilationUnitInfo(mypackage);
 			}
-
 		}
 	}
 
-	private void printICompilationUnitInfo(IPackageFragment mypackage) throws JavaModelException {
-		for (ICompilationUnit unit : mypackage.getCompilationUnits()) {
+	private void printICompilationUnitInfo(IPackageFragment mypackage) throws JavaModelException 
+	{
+		for (ICompilationUnit unit : mypackage.getCompilationUnits()) 
+		{
 			printCompilationUnitDetails(unit);
 
 		}
 	}
 
-	private void printIMethods(ICompilationUnit unit) throws JavaModelException {
+	private void printIMethods(ICompilationUnit unit) throws JavaModelException 
+	{
 		IType[] allTypes = unit.getAllTypes();
 		for (IType type : allTypes) {
 			printIMethodDetails(type);
 		}
 	}
 
-	private void printCompilationUnitDetails(ICompilationUnit unit) throws JavaModelException {
+	private void printCompilationUnitDetails(ICompilationUnit unit) throws JavaModelException 
+	{
 		ProjectDataText+="Pour la Classe: ----" + unit.getElementName()+"-----\n\r";
 		// Document doc = new Document(unit.getSource());
 		// System.out.println("Has number of lines: " + doc.getNumberOfLines());
 		printIMethods(unit);
 	}
 
-	private void printIMethodDetails(IType type) throws JavaModelException {
+	private void printIMethodDetails(IType type) throws JavaModelException 
+	{
 		IMethod[] methods = type.getMethods();
 		for (IMethod method : methods) {
 			ProjectDataText+="Method name " + method.getElementName()+"\n\r";
@@ -164,5 +180,4 @@ public class SampleHandler extends AbstractHandler {
 			ProjectDataText+="Return Type " + method.getReturnType()+"\n\r";
 		}
 	}
-
 }
