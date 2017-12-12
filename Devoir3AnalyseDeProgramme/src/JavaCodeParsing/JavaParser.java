@@ -51,7 +51,37 @@ public class JavaParser implements JavaParserConstants {
  public JavaParser(List<String> filenames, MainController maincontroller)
   {
     this (System.in);
-    Filenames = filenames;
+    Filenames=new ArrayList<String>();
+    Filenames.addAll(filenames);
+    MyMaincontroller = maincontroller;
+       InitValue();
+
+  }
+  /**
+     * Constructor for JavaParser.
+     * @param fileName name of the file to parse
+     */
+  public JavaParser(String filename, MainController maincontroller)
+  {
+    this (System.in);
+    Filename = filename;
+    MethodName=new Method("","public");
+    InnerMethod=new Method("","public");
+    MyMaincontroller = maincontroller;
+    InitValue();
+
+    try
+    {
+      inputStream = new FileInputStream(new File(filename));
+      ReInit(inputStream);
+    }
+    catch (Exception e)
+    {
+      e.printStackTrace();
+    }
+  }
+
+  public void InitValue() {
     MethodName=new Method("","public");
     InnerMethod=new Method("","public");
     IsInClass = false;
@@ -69,54 +99,7 @@ public class JavaParser implements JavaParserConstants {
     ReturnType="";
     InMethodCallerType="";
     InnerMethodName="";
-    MyMaincontroller = maincontroller;
-
-   /* try
-    {
-      inputStream = new FileInputStream(new File(filename));
-      ReInit(inputStream);
     }
-    catch (Exception e)
-    {
-      e.printStackTrace();
-    }*/
-  }
-  /**
-     * Constructor for JavaParser.
-     * @param fileName name of the file to parse
-     */
-  public JavaParser(String filename, MainController maincontroller)
-  {
-    this (System.in);
-    Filename = filename;
-    MethodName=new Method("","public");
-    InnerMethod=new Method("","public");
-    IsInClass = false;
-    IsInMethod =false;
-    IsInBlock=false;
-    IsInConstructor=false;
-    IsVariableDeclare=false;
-    IsExtended=false;
-    CurrentClass = new Stack<String>();
-    CurrentClass.push("");
-    LastModifier="";
-    Invoker="";
-    AttributeIdentifier=new Parameter("","");
-    ReturnType="";
-    InMethodCallerType="";
-    InnerMethodName="";
-    MyMaincontroller = maincontroller;
-
-    try
-    {
-      inputStream = new FileInputStream(new File(filename));
-      ReInit(inputStream);
-    }
-    catch (Exception e)
-    {
-      e.printStackTrace();
-    }
-  }
   JavaParser(JavaCharStream stream, MainController maincontroller)
   {
 
@@ -147,18 +130,28 @@ public class JavaParser implements JavaParserConstants {
     String parseMessage = " -----  Resultat de l'analyse ----- " + System.getProperty("line.separator");
     for(String filename:Filenames)
     {
+
+
+       try {
+      JavaParser  tempParse= new JavaParser(filename,MyMaincontroller);
        try
     {
-      JavaParser tempParse= new JavaParser(filename,MyMaincontroller);
+
       //parser = new JavaParser(args[0],MyMaincontroller);     
       tempParse.CompilationUnit();
       parseMessage += "Java Parser Version 1.7:  Java program parsed successfully." + System.getProperty("line.separator");
+      InitValue();
     }
     catch (ParseException e)
     {
       parseMessage += (e.getMessage());
       parseMessage += "Java Parser Version 1.7:  Encountered errors during parse." + System.getProperty("line.separator");
     }
+
+      } catch (Exception e) {
+        System.out.println("Java Parser Version 1.7:  File " + filename + " not found.");
+
+      }
 
     }
         ReturnResult(choice);
@@ -4030,6 +4023,36 @@ public class JavaParser implements JavaParserConstants {
     finally { jj_save(59, xla); }
   }
 
+  private boolean jj_3R_271() {
+    Token xsp;
+    xsp = jj_scanpos;
+    if (jj_scan_token(91)) {
+    jj_scanpos = xsp;
+    if (jj_scan_token(90)) return true;
+    }
+    if (jj_3R_241()) return true;
+    return false;
+  }
+
+  private boolean jj_3R_255() {
+    Token xsp;
+    xsp = jj_scanpos;
+    if (jj_3R_271()) {
+    jj_scanpos = xsp;
+    if (jj_3R_272()) {
+    jj_scanpos = xsp;
+    if (jj_3R_273()) return true;
+    }
+    }
+    return false;
+  }
+
+  private boolean jj_3R_282() {
+    if (jj_scan_token(COMMA)) return true;
+    if (jj_3R_74()) return true;
+    return false;
+  }
+
   private boolean jj_3R_134() {
     if (jj_scan_token(EXTENDS)) return true;
     if (jj_3R_74()) return true;
@@ -6733,36 +6756,6 @@ public class JavaParser implements JavaParserConstants {
       xsp = jj_scanpos;
       if (jj_3R_283()) { jj_scanpos = xsp; break; }
     }
-    return false;
-  }
-
-  private boolean jj_3R_271() {
-    Token xsp;
-    xsp = jj_scanpos;
-    if (jj_scan_token(91)) {
-    jj_scanpos = xsp;
-    if (jj_scan_token(90)) return true;
-    }
-    if (jj_3R_241()) return true;
-    return false;
-  }
-
-  private boolean jj_3R_255() {
-    Token xsp;
-    xsp = jj_scanpos;
-    if (jj_3R_271()) {
-    jj_scanpos = xsp;
-    if (jj_3R_272()) {
-    jj_scanpos = xsp;
-    if (jj_3R_273()) return true;
-    }
-    }
-    return false;
-  }
-
-  private boolean jj_3R_282() {
-    if (jj_scan_token(COMMA)) return true;
-    if (jj_3R_74()) return true;
     return false;
   }
 

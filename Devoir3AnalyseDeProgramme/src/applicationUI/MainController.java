@@ -12,6 +12,7 @@ import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
+import javax.swing.filechooser.FileSystemView;
 
 import JavaCodeParsing.JavaParser;
 import Models.*;
@@ -32,6 +33,7 @@ import javafx.stage.Stage;
 
 public class MainController {
 
+		public MainController() {};
 		public Arbre Arbre;
 		public String  ResultMsg;
 		public ToggleGroup FileOrFolderSelection;
@@ -109,27 +111,29 @@ public class MainController {
 	    
 	    
 	    private void SelectFile() {
-	    	JFileChooser fc = new JFileChooser();
-	    	File workingDirectory = new File(System.getProperty("user.dir"));
+	    	//Opening file chooser
+	    	JFileChooser fc = new JFileChooser(FileSystemView.getFileSystemView().getDefaultDirectory().getPath());
+	    	fc.setPreferredSize(new Dimension(500, 400));
+	    	File workingDirectory = new File(FileSystemView.getFileSystemView().getDefaultDirectory().getPath());
 	    	fc.setCurrentDirectory(workingDirectory); // start at application current directory
 	    	JFrame parentFrame = new JFrame();
 	    	int returnVal = fc.showOpenDialog(parentFrame);
 	    	if(returnVal == JFileChooser.APPROVE_OPTION) {
-	    	    //File yourFolder = fc.getSelectedFile();
 	    	    BrowseTextField.setText(fc.getSelectedFile().getAbsolutePath());
 	    	}
 
 	    }
 	    
 	    private void SelectFolder() {
-	    	JFileChooser fc = new JFileChooser();
-	    	File workingDirectory = new File(System.getProperty("user.dir"));
+	    	//Opening directory chooser
+	    	JFileChooser fc = new JFileChooser(FileSystemView.getFileSystemView().getDefaultDirectory().getPath());
+	    	fc.setPreferredSize(new Dimension(500, 400));
+	    	File workingDirectory = new File(FileSystemView.getFileSystemView().getDefaultDirectory().getPath());
 	    	fc.setCurrentDirectory(workingDirectory); // start at application current directory
 	    	fc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
 	    	JFrame parentFrame = new JFrame();
 	    	int returnVal = fc.showOpenDialog(parentFrame);
 	    	if(returnVal == JFileChooser.APPROVE_OPTION) {
-	    	    //File yourFolder = fc.getSelectedFile();
 	    	    BrowseTextField.setText(fc.getSelectedFile().getAbsolutePath());
 	    	}
 
@@ -151,12 +155,34 @@ public class MainController {
 	    
 	    private List<String> GetAllFilesFromPath() {
 	    	List<String> results = new ArrayList<String>();
-
-
 	    	File[] files = new File(BrowseTextField.getText()).listFiles();
-	    	//If this pathname does not denote a directory, then listFiles() returns null. 
-
+	    	//If this pathname does not denote a directory 
 	    	for (File file : files) {
+	    		if(file.isDirectory()) {
+	    			List<String> tempList=GetAllFilesFromInnerPath(file.getAbsolutePath());
+	    			if(tempList.size()>0) {
+	    			results.addAll(tempList);
+	    			}
+	    		}
+	    	    if (file.isFile() && getFileExtension(file).equals("java") ) {
+	    	        results.add(file.getAbsolutePath());
+	    	    }
+	    	}
+	    	return results;
+
+	    }
+	    
+	    private List<String> GetAllFilesFromInnerPath(String innerPath) {
+	    	List<String> results = new ArrayList<String>();
+	    	File[] files = new File(innerPath).listFiles();
+	    	//If this pathname does not denote a directory. 
+	    	for (File file : files) {
+	    		if(file.isDirectory()) {
+	    			List<String> tempList=GetAllFilesFromInnerPath(file.getAbsolutePath());
+	    			if(tempList.size()>0) {
+	    			results.addAll(tempList);
+	    			}
+	    		}
 	    	    if (file.isFile() && getFileExtension(file).equals("java") ) {
 	    	        results.add(file.getAbsolutePath());
 	    	    }
@@ -174,32 +200,17 @@ public class MainController {
 	        }
 	    }
 
-	    /*private void ParseValidation1() {
-	    	List<String> allPaths= GetSelectedFiles();
-	    	JavaParser parser=new JavaParser(allPaths,this);
-	    	parser.ExecuteParse(1);
-
-	    }
-	    private void ParseValidation2() {
-	    	List<String> allPaths= GetSelectedFiles();
-	    	JavaParser parser=new JavaParser(allPaths,this);
-	    	parser.ExecuteParse(1);
-	    }
-	    private void ParseValidation3UML() {
-	    	List<String> allPaths= GetSelectedFiles();
-	    	JavaParser parser=new JavaParser(allPaths,this);
-	    	parser.ExecuteParse(1);
-	    }
-	    private void ParseValidation4Method() {
-	    	List<String> allPaths= GetSelectedFiles();
-	    	JavaParser parser=new JavaParser(allPaths,this);
-	    	parser.ExecuteParse(1);
-	    }*/
 	    
 	    private void ParseValidationMethod(int choice) {
 	    	List<String> allPaths= GetSelectedFiles();
+	    	//try {
 	    	JavaParser parser=new JavaParser(allPaths,this);
 	    	parser.ExecuteParse(choice);
+	    	//}catch(Exception e) {
+	    		//System.out.println(e.getStackTrace());
+	    		//System.out.println(e.getMessage());
+	    	//}
+	    	
 	    }
 
 	    
@@ -221,8 +232,7 @@ public class MainController {
 	    
 	    
 	    private void InitValue() {
-	    	Arbre=new Arbre();
-	    	
+	    	Arbre=new Arbre();	    	
 	    	FileOrFolderSelection = new ToggleGroup();
 	    	SelectFileRadioBt.setToggleGroup(FileOrFolderSelection);
 	    	SelectFileRadioBt.setSelected(true);
